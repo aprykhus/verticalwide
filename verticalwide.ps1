@@ -149,7 +149,7 @@ function Format-Vertical {
         foreach ($a in $array) {
             $proplengths += $a.$($Properties[$n]).Length
         }
-        $maxlength = $proplengths | Measure-Object -Maximum | Select -ExpandProperty Maximum
+        $maxlength = $proplengths | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
         $colwidths += $maxlength
     }
 
