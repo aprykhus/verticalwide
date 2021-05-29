@@ -1,10 +1,10 @@
 ﻿<#
 .Synopsis
-   Custom function for displaying data in vertical columns 
+   Custom function for displaying data in vertical columns
 .DESCRIPTION
    Format-Wide organizes horizontally, similar to ls --format horizontal.
    Format-vertical rearranges the pipeline input and re-outputs to Format-Wide
-   so that data flows down rather than to the right. Similar to ls command in 
+   so that data flows down rather than to the right. Similar to ls command in
    POSIX and Microsoft Word columns.
 
    Format-Wide layout:
@@ -17,7 +17,7 @@
      1 | 4 | 7
      2 | 5 | 8
      3 | 6 | 9
-.EXAMPLE 
+.EXAMPLE
 Get-Process | Format-Vertical
 
 
@@ -154,14 +154,14 @@ function Format-Vertical {
     }
 
     foreach ($c in $colwidths) {Write-Debug $C}
-    
+
 
     #Build ScriptBlock for variable amount of properties to pass to Format-Wide cmdlet
     $MainBlock = '$reordered | Format-Wide -Column $cols -Property '
 
     $ProcessBlock = '@{e={"'
     foreach ($n in 0..($Properties.Count-1)) {
-        $ProcessBlock += '{' + $n + '} ' 
+        $ProcessBlock += '{' + $n + '} '
     }
 
     $ProcessBlock += '" -f '
@@ -177,7 +177,7 @@ function Format-Vertical {
     $ScriptBlock = $MainBlock + $ProcessBlock
 
     $block = [ScriptBlock]::Create($ScriptBlock)
-    
+
     Write-Debug $ScriptBlock
 
     #Resulting script block should look like this:
