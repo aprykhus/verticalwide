@@ -89,7 +89,7 @@ function Format-Vertical {
     #Check properties for null
     foreach ($prop in $Properties) {
         if ($null -eq $array.$prop){
-            write-output "$prop property is empty. Specify property or properties using -Properties switch"
+            write-output "$prop property is empty. Specify properties using -Properties switch"
             return
         }
     }
