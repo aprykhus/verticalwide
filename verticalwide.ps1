@@ -1,84 +1,4 @@
-﻿<#
-.Synopsis
-   Custom function for displaying data in vertical columns
-.DESCRIPTION
-   Format-Wide organizes horizontally, similar to ls --format horizontal.
-   Format-vertical rearranges the pipeline input and re-outputs to Format-Wide
-   so that data flows down rather than to the right. Similar to ls command in
-   POSIX and Microsoft Word columns.
-
-   Format-Wide layout:
-    Horizontal
-     1 | 2 | 3
-     4 | 5 | 6
-     7 | 8 | 9
-   Format-Vertical layout
-    Vertical
-     1 | 4 | 7
-     2 | 5 | 8
-     3 | 6 | 9
-.EXAMPLE
-Get-Process | Format-Vertical
-
-
-ApplicationFrameHost                                        svchost
-AppVShNotify                                                svchost
-armsvc                                                      svchost
-audiodg                                                     svchost
-Calculator                                                  svchost
-conhost                                                     svchost
-conhost                                                     svchost
-csrss                                                       svchost
-csrss                                                       svchost
-ctfmon                                                      svchost
-dasHost                                                     svchost
-dllhost                                                     svchost
-dllhost                                                     svchost
-...
-
-.EXAMPLE
-Get-Process | Format-Vertical -Column 3
-
-
-ApplicationFrameHost                    powershell_ise                          svchost
-AppVShNotify                            Registry                                svchost
-armsvc                                  RuntimeBroker                           svchost
-audiodg                                 RuntimeBroker                           svchost
-Calculator                              RuntimeBroker                           svchost
-conhost                                 RuntimeBroker                           svchost
-conhost                                 RuntimeBroker                           svchost
-csrss                                   RuntimeBroker                           svchost
-csrss                                   RuntimeBroker                           svchost
-ctfmon                                  RuntimeBroker                           svchost
-dasHost                                 RuntimeBroker                           svchost
-dllhost                                 SearchApp                               svchost
-dllhost                                 SearchIndexer                           svchost
-dllhost                                 Secure System                           svchost
-...
-
-
-.EXAMPLE
-Get-Process | Format-Vertical -Column 3 -Properties Id,Name
-
-
-7988  ApplicationFrameHost              12700 RuntimeBroker                     3252  svchost
-8916  AppVShNotify                      14300 RuntimeBroker                     3572  svchost
-4332  armsvc                            14436 RuntimeBroker                     3636  svchost
-7652  audiodg                           15248 RuntimeBroker                     3644  svchost
-2808  Calculator                        10104 SearchApp                         3784  svchost
-9296  conhost                           9864  SearchIndexer                     3832  svchost
-13352 conhost                           72    Secure System                     3840  svchost
-696   csrss                             3524  SecurityHealthService             3924  svchost
-13884 csrss                             4660  SecurityHealthSystray             3968  svchost
-5812  ctfmon                            440   services                          4120  svchost
-2356  dasHost                           9464  SettingSyncHost                   4232  svchost
-1288  dllhost                           9896  SgrmBroker                        4240  svchost
-8584  dllhost                           428   ShellExperienceHost               4248  svchost
-14624 dllhost                           12272 sihost                            4256  svchost
-...
-#>
-
-function Format-Vertical {
+﻿function Format-Vertical {
     Param(
     $Column = 2,
     [string[]]$Properties = "Name")
@@ -183,4 +103,84 @@ function Format-Vertical {
     #Resulting script block should look like this:
     #$reordered | Format-Wide -Column $cols -Property @{e={"{0} {1}" -f $_.$($Properties[0]), $_.$($Properties[1])}}
     Invoke-Command -ScriptBlock $block
+
+    <#
+    .Synopsis
+    Custom function for displaying data in vertical columns
+    .DESCRIPTION
+    Format-Wide organizes horizontally, similar to ls --format horizontal.
+    Format-vertical rearranges the pipeline input and re-outputs to Format-Wide
+    so that data flows down rather than to the right. Similar to ls command in
+    POSIX and Microsoft Word columns.
+
+    Format-Wide layout:
+        Horizontal
+        1 | 2 | 3
+        4 | 5 | 6
+        7 | 8 | 9
+    Format-Vertical layout
+        Vertical
+        1 | 4 | 7
+        2 | 5 | 8
+        3 | 6 | 9
+    .EXAMPLE
+    Get-Process | Format-Vertical
+
+
+    ApplicationFrameHost                                        svchost
+    AppVShNotify                                                svchost
+    armsvc                                                      svchost
+    audiodg                                                     svchost
+    Calculator                                                  svchost
+    conhost                                                     svchost
+    conhost                                                     svchost
+    csrss                                                       svchost
+    csrss                                                       svchost
+    ctfmon                                                      svchost
+    dasHost                                                     svchost
+    dllhost                                                     svchost
+    dllhost                                                     svchost
+    ...
+
+    .EXAMPLE
+    Get-Process | Format-Vertical -Column 3
+
+
+    ApplicationFrameHost                    powershell_ise                          svchost
+    AppVShNotify                            Registry                                svchost
+    armsvc                                  RuntimeBroker                           svchost
+    audiodg                                 RuntimeBroker                           svchost
+    Calculator                              RuntimeBroker                           svchost
+    conhost                                 RuntimeBroker                           svchost
+    conhost                                 RuntimeBroker                           svchost
+    csrss                                   RuntimeBroker                           svchost
+    csrss                                   RuntimeBroker                           svchost
+    ctfmon                                  RuntimeBroker                           svchost
+    dasHost                                 RuntimeBroker                           svchost
+    dllhost                                 SearchApp                               svchost
+    dllhost                                 SearchIndexer                           svchost
+    dllhost                                 Secure System                           svchost
+    ...
+
+
+    .EXAMPLE
+    Get-Process | Format-Vertical -Column 3 -Properties Id,Name
+
+
+    7988  ApplicationFrameHost              12700 RuntimeBroker                     3252  svchost
+    8916  AppVShNotify                      14300 RuntimeBroker                     3572  svchost
+    4332  armsvc                            14436 RuntimeBroker                     3636  svchost
+    7652  audiodg                           15248 RuntimeBroker                     3644  svchost
+    2808  Calculator                        10104 SearchApp                         3784  svchost
+    9296  conhost                           9864  SearchIndexer                     3832  svchost
+    13352 conhost                           72    Secure System                     3840  svchost
+    696   csrss                             3524  SecurityHealthService             3924  svchost
+    13884 csrss                             4660  SecurityHealthSystray             3968  svchost
+    5812  ctfmon                            440   services                          4120  svchost
+    2356  dasHost                           9464  SettingSyncHost                   4232  svchost
+    1288  dllhost                           9896  SgrmBroker                        4240  svchost
+    8584  dllhost                           428   ShellExperienceHost               4248  svchost
+    14624 dllhost                           12272 sihost                            4256  svchost
+    ...
+    #>
 }
