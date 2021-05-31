@@ -1,7 +1,8 @@
 ﻿function Format-Vertical {
     Param(
     $Column = 2,
-    [string[]]$Properties = "Name")
+    [string[]]$Properties = "Name",
+    [Switch]$AutoSize)
 
     $array = @($input)
     $count = $array.Count
@@ -13,7 +14,6 @@
             return
         }
     }
-
 
     <# Convert input object to PSCustomObject to write
      nulls so I can properly output blank cells #>
@@ -35,7 +35,34 @@
     $block = [ScriptBlock]::Create($ScriptBlock)
     $array = Invoke-Command $block
 
-    $cols = $Column
+    # Get column widths based off the longest string in each column/property
+    # Store each column width in array
+    $colwidths = @()
+    foreach ($n in 0..($Properties.Count-1)) {
+        $proplengths = @()
+        foreach ($a in $array) {
+            $proplengths += $a.$($Properties[$n]).Length
+        }
+        $maxlength = $proplengths | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
+        $colwidths += $maxlength
+    }
+
+    #AutoSize
+    #Total max lengths of each property
+    $coltotal = $colwidths | Measure-Object -sum | Select-Object -ExpandProperty Sum
+    #Add count of elements to account for space in between sub-columns
+    $coltotal +=$colwidths | Measure-Object | Select-Object -ExpandProperty Count
+    #Get char width of current console window
+    $consolewidth = $host.UI.RawUI.WindowSize.Width
+    #divide console width by total major column width
+    $autocols = [Math]::Floor($consolewidth/$coltotal)
+
+    if ($AutoSize) {
+        $cols = $autocols
+    } else {
+        $cols = $Column
+    }
+
     $rows = [math]::Ceiling($count/$cols) #round up
 
     $reordered = @() #initialize array
@@ -61,23 +88,12 @@
         }
     }
 
-    # Get column widths based off the longest string in each column/property
-    # Store each column width in array
-    $colwidths = @()
-    foreach ($n in 0..($Properties.Count-1)) {
-        $proplengths = @()
-        foreach ($a in $array) {
-            $proplengths += $a.$($Properties[$n]).Length
-        }
-        $maxlength = $proplengths | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
-        $colwidths += $maxlength
-    }
-
-    foreach ($c in $colwidths) {Write-Debug $C}
-
-
     #Build ScriptBlock for variable amount of properties to pass to Format-Wide cmdlet
-    $MainBlock = '$reordered | Format-Wide -Column $cols -Property '
+    if ($AutoSize) {
+        $MainBlock = '$reordered | Format-Wide -Column $autocols -Property '
+    } else {
+        $MainBlock = '$reordered | Format-Wide -Column $cols -Property '
+    }
 
     $ProcessBlock = '@{e={"'
     foreach ($n in 0..($Properties.Count-1)) {
