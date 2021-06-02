@@ -9,8 +9,8 @@
 
     #Check properties for null
     foreach ($prop in $Properties) {
-        if ($null -eq $array.$prop){
-            write-output "$prop property is empty. Specify properties using -Properties switch"
+        if ($null -eq $array.$prop) {
+            write-output "$prop property contains null values. Remove that property and retry"
             return
         }
     }
@@ -25,7 +25,7 @@
 
     $ProcessBlock = '@{'
     foreach ($n in 0..($Properties.Count-1)) {
-        $ProcessBlock += '$($Properties[' + $n + '])=$_.$($Properties[' + $n + ']).ToString();'
+        $ProcessBlock += '$($Properties[' + $n + '])=$_.$($Properties[' + $n + ']).ToString();' #TODO: Check for null?
     }
 
     $ProcessBlock += '}}'
@@ -41,7 +41,11 @@
     foreach ($n in 0..($Properties.Count-1)) {
         $proplengths = @()
         foreach ($a in $array) {
-            $proplengths += $a.$($Properties[$n]).Length
+            if ($a -eq $null) {
+                $proplengths += 0
+            } else {
+                $proplengths += $a.$($Properties[$n]).Length #Check for null
+            }
         }
         $maxlength = $proplengths | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
         $colwidths += $maxlength
@@ -104,7 +108,7 @@
 
     foreach ($n in 0..($Properties.Count-1)) {
         if ($n -ne $Properties.Count-1) {
-            $ProcessBlock += '$_.$($Properties[' + $n + ']).ToString().PadRight($($colwidths[' + $n + ']),[char]32), '
+            $ProcessBlock += '$_.$($Properties[' + $n + ']).ToString().PadRight($($colwidths[' + $n + ']),[char]32), ' #TODO: Check for Null?
         } else {
             $ProcessBlock += '$_.$($Properties[' + $n + '])}}'
         }
