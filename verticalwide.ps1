@@ -7,14 +7,6 @@
     $array = @($input)
     $count = $array.Count
 
-    #Check properties for null
-    foreach ($prop in $Properties) {
-        if ($null -eq $array.$prop) {
-            write-output "$prop property contains null values. Remove that property and retry"
-            return
-        }
-    }
-
     <# Convert input object to PSCustomObject to write
      nulls so I can properly output blank cells #>
 
@@ -25,7 +17,7 @@
 
     $ProcessBlock = '@{'
     foreach ($n in 0..($Properties.Count-1)) {
-        $ProcessBlock += '$($Properties[' + $n + '])=$_.$($Properties[' + $n + ']).ToString();' #TODO: Check for null?
+        $ProcessBlock += '$($Properties[' + $n + '])=[string]$_.$($Properties[' + $n + ']);'
     }
 
     $ProcessBlock += '}}'
