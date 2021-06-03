@@ -46,8 +46,8 @@
     #AutoSize
     #Total max lengths of each property
     $coltotal = $colwidths | Measure-Object -sum | Select-Object -ExpandProperty Sum
-    #Add count of elements to account for space in between sub-columns
-    $coltotal +=$colwidths | Measure-Object | Select-Object -ExpandProperty Count
+    #Add double the count of elements to account for space in between sub-columns
+    $coltotal += ($colwidths | Measure-Object | Select-Object -ExpandProperty Count)*2
     #Get char width of current console window
     $consolewidth = $host.UI.RawUI.WindowSize.Width
     #divide console width by total major column width
