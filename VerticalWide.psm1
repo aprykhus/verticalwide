@@ -1,4 +1,4 @@
-﻿function Format-Vertical {
+﻿function Format-VerticalWide {
     Param(
     $Column = 2,
     [string[]]$Properties = "Name",
@@ -121,7 +121,7 @@
     Custom function for displaying data in vertical columns
     .DESCRIPTION
     Format-Wide organizes horizontally, similar to ls --format horizontal.
-    Format-vertical rearranges the pipeline input and re-outputs to Format-Wide
+    Format-VerticalWide rearranges the pipeline input and re-outputs to Format-Wide
     so that data flows down rather than to the right. Similar to ls command in
     POSIX and Microsoft Word columns.
 
@@ -130,13 +130,13 @@
         1 | 2 | 3
         4 | 5 | 6
         7 | 8 | 9
-    Format-Vertical layout
+    Format-VerticalWide layout
         Vertical
         1 | 4 | 7
         2 | 5 | 8
         3 | 6 | 9
     .EXAMPLE
-    Get-Process | Format-Vertical
+    Get-Process | Format-VerticalWide
 
 
     ApplicationFrameHost                                        svchost
@@ -155,7 +155,7 @@
     ...
 
     .EXAMPLE
-    Get-Process | Format-Vertical -Column 3
+    Get-Process | Format-VerticalWide -Column 3
 
 
     ApplicationFrameHost                    powershell_ise                          svchost
@@ -176,7 +176,7 @@
 
 
     .EXAMPLE
-    Get-Process | Format-Vertical -Column 3 -Properties Id,Name
+    Get-Process | Format-VerticalWide -Column 3 -Properties Id,Name
 
 
     7988  ApplicationFrameHost              12700 RuntimeBroker                     3252  svchost
@@ -195,4 +195,4 @@
     14624 dllhost                           12272 sihost                            4256  svchost
     ...
     #>
-} Export-ModuleMember -Function Format-Vertical
+} Export-ModuleMember -Function Format-VerticalWide
