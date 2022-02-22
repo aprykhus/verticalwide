@@ -33,7 +33,7 @@
     foreach ($n in 0..($Properties.Count-1)) {
         $proplengths = @()
         foreach ($a in $array) {
-            if ($a -eq $null) {
+            if ($null -eq $a) {
                 $proplengths += 0
             } else {
                 $proplengths += $a.$($Properties[$n]).Length #Check for null
