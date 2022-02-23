@@ -123,7 +123,7 @@
     Format-Wide organizes horizontally, similar to ls --format horizontal.
     Format-VerticalWide rearranges the pipeline input and re-outputs to Format-Wide
     so that data flows down rather than to the right. Similar to ls command in
-    POSIX and Microsoft Word columns.
+    UNIX and Microsoft Word columns.
 
     Format-Wide layout
         Horizontal
