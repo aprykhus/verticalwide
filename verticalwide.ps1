@@ -135,6 +135,12 @@
         1 | 4 | 7
         2 | 5 | 8
         3 | 6 | 9
+    .PARAMETER Column
+    Specifies the number of columns in the display. You cannot use the AutoSize and Column parameters in the same command.
+    .PARAMETER Properties
+    Specifies the object properties that appear in the display and the order in which they appear.
+    .PARAMETER AutoSize
+    Adjusts the column size and number of columns based on the width of the data. Overrides Column property.
     .EXAMPLE
     Get-Process | Format-VerticalWide
 
