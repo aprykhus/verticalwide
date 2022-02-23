@@ -125,7 +125,7 @@
     so that data flows down rather than to the right. Similar to ls command in
     POSIX and Microsoft Word columns.
 
-    Format-Wide layout:
+    Format-Wide layout
         Horizontal
         1 | 2 | 3
         4 | 5 | 6
