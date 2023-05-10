@@ -59,7 +59,11 @@
         $cols = $Column
     }
 
+    # limit columns allowed to half of count
+    if ($cols -gt $count/2) {$cols = $count/2}
+
     $rows = [math]::Ceiling($count/$cols) #round up
+    $colmod = $count%$cols
 
     $reordered = @() #initialize array
 
@@ -73,23 +77,53 @@
      2 | 5 | 8
      3 | 6 | 9
      #>
-    for ($i = 0; $i -lt $rows; $i++) {
-        for ($j = 0; $j -lt $count; $j += $rows) {
-            if ($i+$j -ge $count) {
-                #Blank cells for remainder of space on last column, lower right corner
-                $reordered += [PSCustomObject]@{Names = $null}
-            } else {
-                $reordered += $array[$i+$j]
+     if ([Math]::Ceiling($count/$rows) -eq $cols) {
+        <# down, then over
+        1..13 | %{[PSCustomObject]@{Name = $_}} | Format-VerticalWide -Column 4
+            13 values with 4 columns
+            1 | 5 | 9  | 13
+            2 | 6 | 10 |
+            3 | 7 | 11 |
+            4 | 8 | 12 |
+            default
+        #>
+        for ($i = 0; $i -lt $rows; $i++) {
+            for ($j = 0; $j -lt $count; $j += $rows) {
+                if ($i+$j -ge $count) {
+                    #Blank cells for remainder of space on last column, lower right corner
+                    $reordered += [PSCustomObject]@{Names = $null}
+                } else {
+                    $reordered += $array[$i+$j]
+                }
             }
         }
-    }
+     } else {
+        <# spread
+        1..13 | %{[PSCustomObject]@{Name = $_}} | Format-VerticalWide -Column 6
+            13 values with 6 columns
+            1 | 4 | 6 | 8 | 10 | 12
+            2 | 5 | 7 | 9 | 11 | 13
+            3 |   |   |   |    |
+            stretch to number of columns specified
+         #>
+        for ($i = 0; $i -lt $rows; $i++) {
+            for ($j = 0; $j -lt $count; $j += $rows) {
+                if (($j/$rows -gt $colmod) -and ($colmod -ne 0)) {
+                    $j--
+                }
+                if (($i+$j -ge $count) -or (($colmod -ne 0) -and ($i -eq $rows-1) -and (($j+1)/$rows -gt $colmod))) {
+                    #Blank cells for remainder of space on last column, lower right corner
+                    $reordered += [PSCustomObject]@{Names = $null}
+                } else {
+                    $reordered += $array[$i+$j]
+                }
+            }
+        }
+     }
 
     #Build ScriptBlock for variable amount of properties to pass to Format-Wide cmdlet
-    if ($AutoSize) {
-        $MainBlock = '$reordered | Format-Wide -Column $autocols -Property '
-    } else {
-        $MainBlock = '$reordered | Format-Wide -Column $cols -Property '
-    }
+
+    $MainBlock = '$reordered | Format-Wide -Column $cols -Property '
 
     $ProcessBlock = '@{e={"'
     foreach ($n in 0..($Properties.Count-1)) {
