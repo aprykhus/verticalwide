@@ -30,7 +30,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) Aaron Rykhus. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Like Format-Wide but prints down, then over'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''
